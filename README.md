@@ -19,11 +19,11 @@ I wanted to make a config for Nginx + gotify with three commands to deploy
 ```
 
 ```
-//write your domain name here pointed via DNS to your server IP address. You can use Cloudflare to have SSL encrypted connection
-//If you will use Cloudflare, ensure that you have Network>Websockets enabled
+#write your domain name here pointed via DNS to your server IP address. You can use Cloudflare to have SSL encrypted connection
+#If you will use Cloudflare, ensure that you have Network>Websockets enabled
 APP_DOMAIN=push.example.com
 
-//Local ports that will be exposed by Gotify
+#Local ports that will be exposed by Gotify
 APP_PORT=2080
 APP_PORT_SSL=2083
 
