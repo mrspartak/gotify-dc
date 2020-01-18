@@ -1,28 +1,30 @@
-upstream gotify {
+upstream gotifyup {
     server gotify:${APP_PORT};
-}
-
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    ''      close;
 }
 
 server {
   listen 80;
-  listen [::]:80;
-
-  root /var/www/html;
-  index index.html index.htm index.nginx-debian.html;
 
   server_name ${APP_DOMAIN};
 
   location / {
-    proxy_pass http://gotify;
+    proxy_pass http://gotifyup;
 
-    proxy_set_header Host $host;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection $connection_upgrade;
+    # Ensuring it can use websockets
+    proxy_set_header   Upgrade $http_upgrade;
+    proxy_set_header   Connection "upgrade";
+    proxy_set_header   X-Real-IP $remote_addr;
+    proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto http;
+    proxy_redirect     http:// $scheme://;
 
-    proxy_buffering off;
+    # The proxy must preserve the host because gotify verifies the host with the origin
+    # for WebSocket connections
+    proxy_set_header   Host $http_host;
+
+    # These sets the timeout so that the websocket can stay alive
+    proxy_connect_timeout   7m;
+    proxy_send_timeout      7m;
+    proxy_read_timeout      7m;
   }
 }
