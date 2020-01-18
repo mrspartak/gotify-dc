@@ -4,12 +4,14 @@ upstream gotifyup {
 
 server {
   listen 80;
+  listen 443;
 
   server_name ${APP_DOMAIN};
 
   location / {
     proxy_pass http://gotifyup;
 
+    proxy_http_version 1.1;
     # Ensuring it can use websockets
     proxy_set_header   Upgrade $http_upgrade;
     proxy_set_header   Connection "upgrade";

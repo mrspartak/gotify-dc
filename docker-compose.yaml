@@ -5,12 +5,14 @@ services:
         image: gotify/server
         expose: 
             - ${APP_PORT}
+            - ${APP_PORT_SSL}
         volumes:
             - ${APP_DB_PATH}:/app/data
             - ./gotify/config.yml:/etc/gotify/config.yml
         restart: unless-stopped
         environment:
             - GOTIFY_SERVER_PORT=${APP_PORT}
+            - GOTIFY_SERVER_SSL_PORT=${APP_PORT_SSL}
             - GOTIFY_DEFAULTUSER_NAME=${APP_USER_LOGIN}
             - GOTIFY_DEFAULTUSER_PASS=${APP_USER_PASSWORD}
 
