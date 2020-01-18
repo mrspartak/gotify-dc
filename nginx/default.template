@@ -1,0 +1,28 @@
+upstream gotify {
+    server gotify:${APP_PORT};
+}
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  root /var/www/html;
+  index index.html index.htm index.nginx-debian.html;
+
+  server_name ${APP_DOMAIN};
+
+  location / {
+    proxy_pass http://gotify;
+
+    proxy_set_header Host $host;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    proxy_buffering off;
+  }
+}
